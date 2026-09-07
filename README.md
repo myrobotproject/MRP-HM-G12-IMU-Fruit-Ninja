@@ -13,6 +13,8 @@
 <p>
   <a href="fruit-ninja/index.html">Launch the game</a>
   &nbsp;·&nbsp;
+  <a href="https://myrobotproject.github.io/MRP-HM-G12-IMU-Fruit-Ninja/">Open the hosted webpage</a>
+  &nbsp;·&nbsp;
   <a href="fruit-ninja/README.md">Game documentation</a>
 </p>
 
