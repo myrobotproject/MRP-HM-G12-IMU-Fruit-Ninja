@@ -1,50 +1,36 @@
 # IMU Fruit Ninja
 
-`index.html` is a dependency-free browser game for HM-G11 and HM-G12. The
-IMU orientation controls a blade on the canvas: move the sensor to aim and
-make a quick wrist movement to slice fruit. A successful hit splits the fruit
-into two falling halves with a short separation animation. Bombs end the round
-and 20 missed fruits also end the round.
+This folder contains the playable page. It is dependency-free and uses the
+HM-G11 / HM-G12 attitude stream to control a canvas blade.
 
 ## Run
 
-Open [`index.html`](index.html) in desktop Chrome or Edge. No server, package
-manager, or installation is required. Click **Connect IMU**, choose the serial
-port, hold the sensor still for about five seconds, and click **Set neutral
-pose**. The default attitude source is **ESKF**; HM-G12 also offers built-in
-attitude and both devices offer gyro integration.
+Open `index.html` in desktop Chrome or Edge. For Web Serial, use `localhost`
+or HTTPS if the browser blocks `file://` serial access.
 
-The game shares the SDK's browser protocol and ESKF implementation from
-`../dashboard/protocol.js` and `../dashboard/eskf.js`. It uses the same Web
-Serial framing, CRC checks, HM-G11 request/response flow, and HM-G12 stream
-command as the dashboard. A mouse can move the blade before an IMU is
-connected, which makes it possible to verify the game without hardware.
+1. Choose the IMU model and matching baud/ranges.
+2. Click **Connect IMU** and select the port.
+3. Hold the device still while ESKF initializes.
+4. Click **Set neutral pose**.
+5. Click **Start game**.
 
-The parser defaults to the full sensor ranges (±4000 dps and ±16 g). Change
-the selectors if the device was configured differently. With the SDK body
-axes (X=right, Y=forward, Z=up), the control mapping is yaw for screen X and
-roll for screen Y. Yaw is reversed so rotating left moves the blade left on
-screen. Both axes use the same angle and pixel sensitivity; the common pixel
-span is based on the longer screen dimension so the blade can reach the full
-play area. The blade direction follows the actual movement vector, as it would
-for a hand-held knife. Set a neutral pose after holding the device in the
-desired starting orientation.
-
-When ESKF is selected, the game shows gyro-integrated angles immediately while
-the filter collects its stationary initialization window, then switches to the
-ESKF quaternion automatically. A parser or ESKF error is kept from stopping
-the serial reader; the live integrated angle remains available as a fallback.
+The page never connects to a serial device automatically. A mouse can move the
+blade before an IMU is connected, which is useful for checking the game loop.
 
 ## Controls
 
-- **Connect IMU**: opens the browser serial-port picker and starts streaming.
-- **Set neutral pose**: records the current orientation as the blade centre.
-- **Start/Pause game**: starts or pauses a 120-second round. The round ends
-  after 20 missed fruits.
-- Device, baud rate, and sensor ranges must match the device configuration.
+- Yaw controls screen left/right. The yaw sign is reversed for natural motion.
+- Roll controls screen up/down.
+- The blade angle follows the actual movement vector.
+- The round lasts 120 seconds and allows 20 missed fruits.
+- Slicing a bomb ends the round.
 
-If the browser reports that a port is busy or cannot be opened, close or
-disconnect the dashboard/fruit-game page that currently owns it, then refresh
-this page. Only one browser page can open a serial port at a time. Chrome or
-Edge on `localhost` is recommended for Web Serial; opening the file directly
-may be blocked by browser policy.
+## Attitude sources
+
+- **ESKF**: default; estimates attitude from raw gyro and accelerometer data.
+- **Built-in**: HM-G12 attitude frames when available.
+- **Gyro integration**: lightweight fallback based on the device timestamp.
+
+The parser defaults to ±4000 dps and ±16 g. Update the selectors when the
+device is configured differently. Shared browser code is loaded from
+`../dashboard/protocol.js` and `../dashboard/eskf.js`.
