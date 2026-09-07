@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10152b">
+  <title>IMU Fruit Ninja</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-shell">
+    <canvas id="gameCanvas" aria-label="Fruit Ninja game area"></canvas>
+
+    <header class="hud">
+      <div class="title-block">
+        <span class="eyebrow">HM IMU LAB</span>
+        <h1>IMU Fruit Ninja</h1>
+        <span id="connectionStatus" class="status idle">Not connected</span>
+      </div>
+      <div class="score-board">
+        <div><span>Score</span><strong id="scoreValue">0</strong></div>
+        <div><span>Misses</span><strong id="missValue">0 / 20</strong></div>
+        <div><span>Time</span><strong id="timeValue">60</strong></div>
+      </div>
+    </header>
+
+    <section class="control-panel" aria-label="IMU and game controls">
+      <div class="control-row">
+        <label>Device
+          <select id="deviceSelect">
+            <option value="hm-g12">HM-G12</option>
+            <option value="hm-g11">HM-G11</option>
+          </select>
+        </label>
+        <label>Attitude
+          <select id="attitudeSelect">
+            <option value="builtin">Built-in (HM-G12)</option>
+            <option value="eskf" selected>ESKF</option>
+            <option value="integration">Gyro integration</option>
+          </select>
+        </label>
+        <label>Baud
+          <select id="baudSelect">
+            <option value="921600">921600</option>
+            <option value="115200">115200</option>
+            <option value="1500000">1500000</option>
+            <option value="3000000">3000000</option>
+          </select>
+        </label>
+        <label>Gyro range (default ±4000 dps)
+          <select id="gyroRangeSelect"></select>
+        </label>
+        <label>Accel range (default ±16 g)
+          <select id="accelRangeSelect"></select>
+        </label>
+      </div>
+      <div class="control-row action-row">
+        <button id="connectButton" class="button primary" type="button">Connect IMU</button>
+        <button id="calibrateButton" class="button" type="button" disabled>Set neutral pose</button>
+        <button id="startButton" class="button accent" type="button">Start game</button>
+        <span id="inputReadout" class="input-readout">Move the IMU to aim</span>
+      </div>
+    </section>
+
+    <div id="overlay" class="overlay">
+      <div class="overlay-card">
+        <div class="fruit-logo" aria-hidden="true">🍉</div>
+        <h2 id="overlayTitle">Ready to slice?</h2>
+        <p id="overlayMessage">Connect an IMU, hold it flat, set the neutral pose, then swing your wrist to move the blade.</p>
+        <button id="overlayButton" class="button primary" type="button">Start game</button>
+      </div>
+    </div>
+
+    <footer class="hint-bar">
+        <span>Yaw: left/right · Roll: up/down · Blade follows movement</span>
+      <span>Slice fruit, avoid bombs</span>
+      <span id="frameReadout">Frames: 0</span>
+    </footer>
+  </main>
+  <script src="../dashboard/protocol.js"></script>
+  <script src="../dashboard/eskf.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
